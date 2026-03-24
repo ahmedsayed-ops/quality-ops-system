@@ -9,9 +9,9 @@ const config = {
     process.env.REACT_APP_APPS_SCRIPT_URL ||
     "https://script.google.com/macros/s/AKfycbzmZgc0R0BvGZdUCS6JAZEsnn2nCSWeMsoTNyiZA0eVA9ODhzLcdtY_mE8PHFoRL2YZ/exec",
 
-  COMPANY_NAME: "Your Company",
+  COMPANY_NAME: "Dsquares",
   SYSTEM_TITLE: "Quality Operations Platform",
-  LOGO_URL: null,
+  LOGO_URL: "/logo.png",
 
   // ── Module 1: Visits (existing) ───────────────────────────────
   VISIT_QUESTIONS: [

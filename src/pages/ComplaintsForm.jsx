@@ -1,9 +1,4 @@
 // src/pages/ComplaintsForm.jsx
-// Fields match Complaints H (2026) sheet exactly:
-// Call Date | Visit Customer Date | Username | Password | Merchant name
-// Project | Address | District | Government | Employee Name | Branch Number
-// Description | Solve The complaint | Type Of Issue | Link | comment
-
 import React, { useState, useCallback } from "react";
 import config from "../config";
 import { submitComplaint } from "../services/api";
@@ -54,14 +49,14 @@ export default function ComplaintsForm() {
 
   const validate = () => {
     const e = {};
-    if (!form.callDate)              e.callDate       = "مطلوب";
-    if (!form.username.trim())       e.username       = "مطلوب";
-    if (!form.merchantName.trim())   e.merchantName   = "مطلوب";
-    if (!form.project)               e.project        = "مطلوب";
-    if (!form.government)            e.government     = "مطلوب";
-    if (!form.employeeName.trim())   e.employeeName   = "مطلوب";
-    if (!form.description.trim())    e.description    = "مطلوب";
-    if (!form.typeOfIssue)           e.typeOfIssue    = "مطلوب";
+    if (!form.callDate)              e.callDate       = "Required";
+    if (!form.username.trim())       e.username       = "Required";
+    if (!form.merchantName.trim())   e.merchantName   = "Required";
+    if (!form.project)               e.project        = "Required";
+    if (!form.government)            e.government     = "Required";
+    if (!form.employeeName.trim())   e.employeeName   = "Required";
+    if (!form.description.trim())    e.description    = "Required";
+    if (!form.typeOfIssue)           e.typeOfIssue    = "Required";
     return e;
   };
 
@@ -88,10 +83,10 @@ export default function ComplaintsForm() {
   if (status === "success") return (
     <SuccessScreen
       title="Complaint Saved!"
-      subtitle="تم حفظ الشكوى في Google Sheets."
+      subtitle="The complaint has been saved to Google Sheets."
       date={form.callDate}
       onNew={reset}
-      btnLabel="تسجيل شكوى جديدة"
+      btnLabel="Record Another Complaint"
     />
   );
 
@@ -102,14 +97,14 @@ export default function ComplaintsForm() {
       <div className="mb-6">
         <div className="page-pill bg-orange-50 text-orange-700 border-orange-200">📋 Complaints</div>
         <h1 className="page-title">Complaint Entry Form</h1>
-        <p className="page-subtitle">نموذج تسجيل الشكاوى — Complaints H (2026)</p>
+        <p className="page-subtitle">Log a new customer complaint</p>
       </div>
 
       {status==="error" && <Alert type="error" title="Submission Failed" message={msg} onClose={()=>setStatus("idle")} className="mb-5"/>}
-      {ec>0 && <Alert type="warning" title={`${ec} حقل مطلوب`} message="برجاء ملء الحقول المميزة." className="mb-5"/>}
+      {ec>0 && <Alert type="warning" title={`${ec} field${ec>1?"s":""} required`} message="Please fill in the highlighted fields." className="mb-5"/>}
 
-      {/* ── Section 1: بيانات الشكوى ── */}
-      <FormSection title="بيانات الشكوى" icon="📋" number={1}>
+      {/* Section 1: Complaint Information */}
+      <FormSection title="Complaint Information" icon="📋" number={1}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
           <FormField id="callDate" label="Call Date" error={errs.callDate} required>
@@ -118,7 +113,7 @@ export default function ComplaintsForm() {
               value={form.callDate} onChange={e=>set("callDate",e.target.value)}/>
           </FormField>
 
-          <FormField id="visitCustomerDate" label="Visit Customer Date" hint="اختياري">
+          <FormField id="visitCustomerDate" label="Visit Customer Date" hint="Optional">
             <input type="date" className="input-field" value={form.visitCustomerDate}
               onChange={e=>set("visitCustomerDate",e.target.value)}/>
           </FormField>
@@ -127,7 +122,7 @@ export default function ComplaintsForm() {
             <select id="field-project"
               className={`input-field ${errs.project?"has-error":""}`}
               value={form.project} onChange={e=>set("project",e.target.value)}>
-              <option value="">اختر المشروع…</option>
+              <option value="">Select project…</option>
               {config.COMPLAINT_PROJECTS.map(p=><option key={p} value={p}>{p}</option>)}
             </select>
           </FormField>
@@ -136,26 +131,26 @@ export default function ComplaintsForm() {
             <select id="field-government"
               className={`input-field ${errs.government?"has-error":""}`}
               value={form.government} onChange={e=>set("government",e.target.value)}>
-              <option value="">اختر المحافظة…</option>
+              <option value="">Select government…</option>
               {config.GOVERNMENTS.map(g=><option key={g} value={g}>{g}</option>)}
             </select>
           </FormField>
 
-          <FormField id="district" label="District" hint="اختياري">
-            <input className="input-field" placeholder="المنطقة"
+          <FormField id="district" label="District" hint="Optional">
+            <input className="input-field" placeholder="District / Area"
               value={form.district} onChange={e=>set("district",e.target.value)}/>
           </FormField>
 
-          <FormField id="address" label="Address" hint="اختياري">
-            <input className="input-field" placeholder="العنوان"
+          <FormField id="address" label="Address" hint="Optional">
+            <input className="input-field" placeholder="Full address"
               value={form.address} onChange={e=>set("address",e.target.value)}/>
           </FormField>
 
         </div>
       </FormSection>
 
-      {/* ── Section 2: بيانات الفرع ── */}
-      <FormSection title="بيانات الفرع والموظف" icon="🏪" number={2}>
+      {/* Section 2: Merchant & Branch Details */}
+      <FormSection title="Merchant & Branch Details" icon="🏪" number={2}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
           <FormField id="username" label="Username" error={errs.username} required>
@@ -165,7 +160,7 @@ export default function ComplaintsForm() {
               onChange={e=>set("username",e.target.value)} autoComplete="off"/>
           </FormField>
 
-          <FormField id="password" label="Password" hint="اختياري">
+          <FormField id="password" label="Password" hint="Optional">
             <input className="input-field font-mono" placeholder="Dsq@1156"
               value={form.password} onChange={e=>set("password",e.target.value)}
               autoComplete="new-password"/>
@@ -174,27 +169,27 @@ export default function ComplaintsForm() {
           <FormField id="merchantName" label="Merchant Name" error={errs.merchantName} required>
             <input id="field-merchantName"
               className={`input-field ${errs.merchantName?"has-error":""}`}
-              placeholder="اسم المنشأة" value={form.merchantName}
+              placeholder="Merchant / branch name" value={form.merchantName}
               onChange={e=>set("merchantName",e.target.value)} autoComplete="off"/>
           </FormField>
 
           <FormField id="employeeName" label="Employee Name" error={errs.employeeName} required>
             <input id="field-employeeName"
               className={`input-field ${errs.employeeName?"has-error":""}`}
-              placeholder="اسم الموظف" value={form.employeeName}
+              placeholder="Employee full name" value={form.employeeName}
               onChange={e=>set("employeeName",e.target.value)} autoComplete="off"/>
           </FormField>
 
           <FormField id="branchNumber" label="Branch Number / Mobile">
-            <input className="input-field font-mono" placeholder="رقم الفرع / الموبايل"
+            <input className="input-field font-mono" placeholder="Branch number or mobile"
               value={form.branchNumber} onChange={e=>set("branchNumber",e.target.value)}/>
           </FormField>
 
         </div>
       </FormSection>
 
-      {/* ── Section 3: نوع الشكوى ── */}
-      <FormSection title="نوع الشكوى" icon="🗂️" number={3}>
+      {/* Section 3: Issue Type */}
+      <FormSection title="Issue Type" icon="🗂️" number={3}>
         <div id="field-typeOfIssue"
           className={`p-3 rounded-xl border ${errs.typeOfIssue?"border-red-300 bg-red-50/30":"border-slate-100"}`}>
           <div className="text-xs font-display font-semibold text-slate-600 mb-3">
@@ -216,36 +211,36 @@ export default function ComplaintsForm() {
         </div>
       </FormSection>
 
-      {/* ── Section 4: تفاصيل الشكوى ── */}
-      <FormSection title="تفاصيل الشكوى" icon="📝" number={4}>
+      {/* Section 4: Complaint Details */}
+      <FormSection title="Complaint Details" icon="📝" number={4}>
         <div className="space-y-4">
 
-          <FormField id="description" label="Description — شكوى العميل" error={errs.description} required>
+          <FormField id="description" label="Description — Customer Complaint" error={errs.description} required>
             <textarea id="field-description" rows={4}
               className={`input-field resize-none ${errs.description?"has-error":""}`}
-              placeholder="وصف الشكوى بالتفصيل (بالعربي أو الإنجليزي)..."
+              placeholder="Describe the complaint in detail…"
               value={form.description} onChange={e=>set("description",e.target.value)}/>
             <div className="flex justify-end mt-1">
               <span className={`text-xs ${form.description.length>800?"text-amber-500":"text-slate-300"}`}>
-                {form.description.length} حرف
+                {form.description.length} chars
               </span>
             </div>
           </FormField>
 
-          <FormField id="solveComplaint" label="Solve The Complaint — الحل">
+          <FormField id="solveComplaint" label="Resolution — Solve The Complaint">
             <textarea rows={3} className="input-field resize-none"
-              placeholder="تم التواصل مع الفرع وافاد بـ..."
+              placeholder="Describe how the complaint was resolved…"
               value={form.solveComplaint} onChange={e=>set("solveComplaint",e.target.value)}/>
           </FormField>
 
-          <FormField id="link" label="Asana Link" hint="اختياري">
+          <FormField id="link" label="Asana Link" hint="Optional">
             <input className="input-field text-xs font-mono"
               placeholder="https://app.asana.com/..."
               value={form.link} onChange={e=>set("link",e.target.value)}/>
           </FormField>
 
-          <FormField id="comment" label="Comment" hint="اختياري">
-            <input className="input-field" placeholder="ملاحظة إضافية..."
+          <FormField id="comment" label="Comment" hint="Optional">
+            <input className="input-field" placeholder="Additional notes…"
               value={form.comment} onChange={e=>set("comment",e.target.value)}/>
           </FormField>
 
@@ -255,11 +250,11 @@ export default function ComplaintsForm() {
       <button onClick={handleSubmit} disabled={status==="loading"}
         className="btn-primary w-full py-4 text-base" style={{background:"#ea580c"}}>
         {status==="loading"
-          ? <><svg className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"/>&nbsp;جاري الحفظ…</>
-          : <><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>حفظ الشكوى</>}
+          ? <><svg className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"/>&nbsp;Saving…</>
+          : <><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>Save Complaint</>}
       </button>
       <p className="text-center text-xs text-slate-400 mt-3">
-        الحقول المميزة بـ <span className="text-red-400 font-semibold">*</span> مطلوبة.
+        Fields marked <span className="text-red-400 font-semibold">*</span> are required.
       </p>
     </div>
   );
