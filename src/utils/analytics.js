@@ -1,4 +1,4 @@
-import { isPositive, isNegative } from "./answers";
+import { isPositive } from "../utils/answers";
 
 export function countPosNeg(records, qKeys) {
   let p = 0, n = 0;
